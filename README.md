@@ -1,7 +1,7 @@
 # Tip-Calculator
 Another Tip Calculator for IOS
 
-Adjust the slider to find the perfect tip!
+##Adjust the slider to find the perfect tip!
 
 Tap the setting tab to
 * Set your default tip
