@@ -4,7 +4,7 @@
 
 Submitted by: **Ellis Hoag**
 
-Time spent: **5** hours spent in total
+Time spent: **5?** hours spent in total
 
 ## User Stories
 
@@ -30,15 +30,15 @@ Here's a walkthrough of implemented user stories:
 
 <img src='https://github.com/sparkasaurusRex/Tip-Calculator/blob/master/TipCalculator.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
+GIF created with [Online-Convert](http://image.online-convert.com/convert-to-gif).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+The most difficult challange was trying to build the UI to fit all iPhone models. Currently this app has only been tested on the iPhone 6s. Any other models may have elements cut off at the edges. 
 
 ## License
 
-    Copyright [yyyy] [name of copyright owner]
+    Copyright [2015] [Ellis Hoag]
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
