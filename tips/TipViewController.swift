@@ -38,6 +38,10 @@ class ViewController: UIViewController {
     
     var rounding: Bool = false
     
+    let numberFormator = NSNumberFormatter()
+    
+    let memoryDuration = NSTimeInterval.init(600) //10 minutes
+    
     func fadeIn() {
         
         self.barView.alpha = 1.0
@@ -62,9 +66,11 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        print("Did Load")
+        
         let defaults = NSUserDefaults.standardUserDefaults()
         
-        let defaultsDictionary = ["Default Tip": 15, "Red Background": 1.0, "Green Background": 1.0, "Blue Background": 1.0, "Currency Sign": 0, "Rounding Switch": false]
+        let defaultsDictionary = ["Default Tip": 15, "Red Background": 1.0, "Green Background": 1.0, "Blue Background": 1.0, "Currency Sign": 0, "Rounding Switch": false, "Bill Field": 0, "Last Active Time": NSDate()]
         
         defaults.registerDefaults(defaultsDictionary)
         
@@ -107,29 +113,57 @@ class ViewController: UIViewController {
         billField.placeholder = currency + "0.00"
         
         rounding = defaults.boolForKey("Rounding Switch")
+        
+        numberFormator.numberStyle = .CurrencyStyle
+        
+        numberFormator.currencySymbol = currency
+
+        let lastActiveTime = defaults.valueForKey("Last Active Time") as? NSDate
+                
+        if (-lastActiveTime!.timeIntervalSinceNow <= memoryDuration) {
+            
+            billField.text = defaults.valueForKey("Bill Field") as? String
+            
+            onEditingChanged()
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
         
+        print("Did Appear")
+        
         [billField .becomeFirstResponder()]
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        
+        print("Will Disappear")
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        defaults.setValue(billField.text, forKey: "Bill Field")
+        
+        defaults.setValue(NSDate(), forKey: "Last Active Time")
+        
+        defaults.synchronize()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    @IBAction func onEditingChanged(sender: AnyObject) {
+    
+    func onEditingChanged() {
         
         let tipPercentage = Int(percentageSlider.value)
-
+        
         tipPercentageLabel.text = "Tip: \(tipPercentage)%"
-
+        
         
         if let billAmount = Float(billField.text!)  {
             
             if (billAmount == 0 && !inputIsEmpty) {
-             
+                
                 inputIsEmpty = true
                 
                 UIView.animateWithDuration(animationTime, animations: fadeOut)
@@ -152,9 +186,9 @@ class ViewController: UIViewController {
                 tipAmount = totalAmount - billAmount
             }
             
-            tipLabel.text = String(format: currency + "%.2f", tipAmount)
-        
-            totalLabel.text = String(format: currency + "%.2f", totalAmount)
+            tipLabel.text = numberFormator.stringFromNumber(tipAmount)!
+            
+            totalLabel.text = numberFormator.stringFromNumber(totalAmount)!
             
         }
         else if (!inputIsEmpty) {
@@ -163,7 +197,11 @@ class ViewController: UIViewController {
             
             UIView.animateWithDuration(animationTime, animations: fadeOut)
         }
+    }
+
+    @IBAction func onEditingChanged(sender: AnyObject) {
         
+        onEditingChanged()
     }
     
 }
